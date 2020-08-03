@@ -1,3 +1,4 @@
+import 'package:book_exchange_admin/screens/add_products.dart';
 import 'package:flutter/material.dart';
 import '../db/category.dart';
 import 'package:flutter_flexible_toast/flutter_flexible_toast.dart';
@@ -190,7 +191,9 @@ class _AdminState extends State<Admin> {
             ListTile(
               leading: Icon(Icons.add),
               title: Text("Add product"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>AddProduct()));
+              },
             ),
             Divider(),
             ListTile(
