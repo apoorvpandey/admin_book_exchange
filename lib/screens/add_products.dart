@@ -31,7 +31,8 @@ class _AddProductState extends State<AddProduct> {
   File _image1;
   File _image2;
   File _image3;
-  bool isLoading = false;
+  bool isLoadingButton = true;
+  bool isLoadingProgress = false;
 
   @override
   void initState() {
@@ -207,14 +208,32 @@ class _AddProductState extends State<AddProduct> {
                 ),
               ),
 
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
-                child: Text("Add Product"),
-                onPressed: () {
-                  validateAndUpload();
-                },
+              Visibility(
+                visible: isLoadingButton,
+                child: FlatButton(
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  child: Text("Add Product"),
+                  onPressed: () {
+                    validateAndUpload();
+                  },
+                ),
               ),
+              Visibility(
+                  visible: isLoadingProgress,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Uploading product images..."),
+                        ),
+                      ]
+                  )),
             ],
           ),
         ),
@@ -323,6 +342,8 @@ class _AddProductState extends State<AddProduct> {
 
   void validateAndUpload() async {
     if (_formKey.currentState.validate()) {
+      setState(() => isLoadingButton = false);
+      setState(() => isLoadingProgress = true);
       if (_image1 != null && _image2 != null && _image3 != null) {
         String imageUrl1;
         String imageUrl2;
@@ -363,6 +384,7 @@ class _AddProductState extends State<AddProduct> {
               price: double.parse(priceController.text));
           _formKey.currentState.reset();
           FlutterFlexibleToast.showToast(message: "Product added");
+          setState(() => isLoadingProgress = false);
         });
       } else {
         FlutterFlexibleToast.showToast(message: "Please select all images");
