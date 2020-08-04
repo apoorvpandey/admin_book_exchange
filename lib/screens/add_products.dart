@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:book_exchange_admin/db/product.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_flexible_toast/flutter_flexible_toast.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,11 @@ class AddProduct extends StatefulWidget {
 class _AddProductState extends State<AddProduct> {
   CategoryService _categoryService = CategoryService();
   BrandService _brandService = BrandService();
+  ProductService productService = ProductService();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController productNameController = new TextEditingController();
   TextEditingController quantityController = new TextEditingController();
+  TextEditingController priceController = new TextEditingController();
   List<DocumentSnapshot> brands = <DocumentSnapshot>[];
   List<DocumentSnapshot> categories = <DocumentSnapshot>[];
   List<DropdownMenuItem<String>> categoriesDropDown =
@@ -28,6 +31,7 @@ class _AddProductState extends State<AddProduct> {
   File _image1;
   File _image2;
   File _image3;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -128,8 +132,8 @@ class _AddProductState extends State<AddProduct> {
                   validator: (value) {
                     if (value.isEmpty) {
                       return "You must enter product name";
-                    } else if (value.length > 10) {
-                      return "Product name can't have more than 10 characters";
+                    } else if (value.length > 20) {
+                      return "Product name can't have more than 20 characters";
                     }
                   },
                 ),
@@ -178,10 +182,26 @@ class _AddProductState extends State<AddProduct> {
                 child: TextFormField(
                   controller: quantityController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(hintText: "Quantity"),
+                  decoration: InputDecoration(
+                      hintText: "Quantity", labelText: "Quantity"),
                   validator: (value) {
                     if (value.isEmpty) {
                       return "You must enter quantity";
+                    }
+                  },
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration:
+                      InputDecoration(hintText: "Price", labelText: "Price"),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "You must enter price";
                     }
                   },
                 ),
@@ -257,7 +277,11 @@ class _AddProductState extends State<AddProduct> {
         ),
       );
     } else {
-      return Image.file(_image1, fit: BoxFit.fill, width: double.infinity,);
+      return Image.file(
+        _image1,
+        fit: BoxFit.fill,
+        width: double.infinity,
+      );
     }
   }
 
@@ -271,7 +295,11 @@ class _AddProductState extends State<AddProduct> {
         ),
       );
     } else {
-      return Image.file(_image2, fit: BoxFit.fill, width: double.infinity,);
+      return Image.file(
+        _image2,
+        fit: BoxFit.fill,
+        width: double.infinity,
+      );
     }
   }
 
@@ -285,42 +313,60 @@ class _AddProductState extends State<AddProduct> {
         ),
       );
     } else {
-     return Image.file(_image3, fit: BoxFit.fill, width: double.infinity,);
+      return Image.file(
+        _image3,
+        fit: BoxFit.fill,
+        width: double.infinity,
+      );
     }
   }
 
   void validateAndUpload() async {
-    if(_formKey.currentState.validate())
-      {
-        if(_image1 != null && _image2 != null && _image3 != null)
-          {
-            String imageUrl1;
-            String imageUrl2;
-            String imageUrl3;
-            final FirebaseStorage storage = FirebaseStorage.instance;
-            final String picture1 = "1${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
-            StorageUploadTask task1 = storage.ref().child(picture1).putFile(_image1);
+    if (_formKey.currentState.validate()) {
+      if (_image1 != null && _image2 != null && _image3 != null) {
+        String imageUrl1;
+        String imageUrl2;
+        String imageUrl3;
+        final FirebaseStorage storage = FirebaseStorage.instance;
+        final String picture1 =
+            "1${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
+        StorageUploadTask task1 =
+            storage.ref().child(picture1).putFile(_image1);
 
-            final String picture2 = "2${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
-            StorageUploadTask task2 = storage.ref().child(picture2).putFile(_image2);
+        final String picture2 =
+            "2${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
+        StorageUploadTask task2 =
+            storage.ref().child(picture2).putFile(_image2);
 
-            final String picture3 = "3${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
-            StorageUploadTask task3 = storage.ref().child(picture3).putFile(_image3);
+        final String picture3 =
+            "3${DateTime.now().millisecondsSinceEpoch.toString()}.jpg";
+        StorageUploadTask task3 =
+            storage.ref().child(picture3).putFile(_image3);
 
-            StorageTaskSnapshot snapshot1 = await task1.onComplete.then((snapshot) => snapshot);
-            StorageTaskSnapshot snapshot2 = await task2.onComplete.then((snapshot) => snapshot);
+        StorageTaskSnapshot snapshot1 =
+            await task1.onComplete.then((snapshot) => snapshot);
+        StorageTaskSnapshot snapshot2 =
+            await task2.onComplete.then((snapshot) => snapshot);
 
-            task3.onComplete.then((snapshot3) async {
-            imageUrl1 = await snapshot1.ref.getDownloadURL();
-            imageUrl2 = await snapshot2.ref.getDownloadURL();
-            imageUrl3 = await snapshot3.ref.getDownloadURL();
-            });
+        task3.onComplete.then((snapshot3) async {
+          imageUrl1 = await snapshot1.ref.getDownloadURL();
+          imageUrl2 = await snapshot2.ref.getDownloadURL();
+          imageUrl3 = await snapshot3.ref.getDownloadURL();
+          List<String> imageList = [imageUrl1, imageUrl2, imageUrl3];
 
-          }
-        else
-          {
-            FlutterFlexibleToast.showToast(message: "Please select all images");
-          }
+          productService.uploadProduct(
+              productName: productNameController.text,
+              brand: _currentBrand,
+              category: _currentCategory,
+              quantity: int.parse(quantityController.text),
+              images: imageList,
+              price: double.parse(priceController.text));
+          _formKey.currentState.reset();
+          FlutterFlexibleToast.showToast(message: "Product added");
+        });
+      } else {
+        FlutterFlexibleToast.showToast(message: "Please select all images");
       }
+    }
   }
 }
