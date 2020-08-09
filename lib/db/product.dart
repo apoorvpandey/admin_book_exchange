@@ -5,7 +5,7 @@ class ProductService{
   Firestore _firestore = Firestore.instance;
   String ref = "products";
 
-  void uploadProduct({String productName, String brand, String category, int quantity, List images, double price}){
+  void uploadProduct({String productName, String brand, String category, int quantity, List images, String price}){
     var id = Uuid();
     String productId = id.v1();
 

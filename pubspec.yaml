@@ -35,7 +35,7 @@ dependencies:
   google_sign_in: ^4.5.1
   shared_preferences: ^0.5.8
   firebase_database: ^3.1.6
-  flutter_flexible_toast: ^0.1.4
+  fluttertoast: ^7.0.2
   firebase_storage: ^3.1.6
   image_picker: ^0.6.7+4
   cached_network_image: ^2.2.0+1

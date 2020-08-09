@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:book_exchange_admin/db/product.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_flexible_toast/flutter_flexible_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../db/category.dart';
 import '../db/brand.dart';
 import 'package:image_picker/image_picker.dart';
@@ -133,8 +133,8 @@ class _AddProductState extends State<AddProduct> {
                   validator: (value) {
                     if (value.isEmpty) {
                       return "You must enter product name";
-                    } else if (value.length > 20) {
-                      return "Product name can't have more than 20 characters";
+                    } else if (value.length >= 70) {
+                      return "Product name can't have more than 70 characters";
                     }
                   },
                 ),
@@ -381,13 +381,34 @@ class _AddProductState extends State<AddProduct> {
               category: _currentCategory,
               quantity: int.parse(quantityController.text),
               images: imageList,
-              price: double.parse(priceController.text));
+              price: priceController.text,
+          );
           _formKey.currentState.reset();
-          FlutterFlexibleToast.showToast(message: "Product added");
+          Fluttertoast.showToast(
+              msg: "Product added",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
           setState(() => isLoadingProgress = false);
         });
       } else {
-        FlutterFlexibleToast.showToast(message: "Please select all images");
+        Fluttertoast.showToast(
+            msg: "Please select all images",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+        setState(() {
+          isLoadingButton = true;
+          isLoadingProgress = false;
+        });
       }
     }
   }
