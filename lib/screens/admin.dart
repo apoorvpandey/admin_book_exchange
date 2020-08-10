@@ -58,36 +58,45 @@ class _AdminState extends State<Admin> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                        const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 6.0),
-                        child: Text(
-                          "Requested product name:",
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.bold),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 6.0),
+                          child: Text(
+                            requestedProduct[index].requestedProductName,
+                            style: TextStyle(
+                                fontSize: 22.0, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding:
-                        const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 12.0),
-                        child: Text(
-                          requestedProduct[index].requestedProductName,
-                          style: TextStyle(fontSize: 18.0),
+                        Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 12.0),
+                          child: Text(
+                            requestedProduct[index].userName,
+                            style: TextStyle(fontSize: 18.0),
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding:
-                        const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 6.0),
-                        child: Text(
-                          "Name",
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.bold),
+                        Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 12.0),
+                          child: Text(
+                            requestedProduct[index].userEmail,
+                            style: TextStyle(fontSize: 18.0),
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding:
+                          const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 12.0),
+                          child: Text(
+                            requestedProduct[index].mobileNumber,
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

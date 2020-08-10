@@ -133,7 +133,7 @@ class _AddProductState extends State<AddProduct> {
                   validator: (value) {
                     if (value.isEmpty) {
                       return "You must enter product name";
-                    } else if (value.length >= 70) {
+                    } else if (value.length >= 50) {
                       return "Product name can't have more than 70 characters";
                     }
                   },
