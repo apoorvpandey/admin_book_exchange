@@ -258,7 +258,7 @@ class _AdminState extends State<Admin> {
   Future<List<RequestedProduct>> getProducts() =>
       _firestore.collection("requests").getDocuments().then((snap) {
         List<RequestedProduct> list = [];
-
+      print(snap);
         snap.documents
             .forEach((f) => list.add(RequestedProduct.fromSnapshot(f)));
         return list;
