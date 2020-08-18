@@ -4,14 +4,23 @@ class RequestedProduct{
 static const String RESUESTEDPRODUCTNAME= "NameOfTheRequestedProduct";
 static const String USEREMAIL= "UserEmail";
 static const String USERNAME= "UserName";
-static const String MOBILENMBER= "MobileNumber";
+static const String MOBILENUMBER= "MobileNumber";
+static const String ADDRESS= "Address";
+
 
 String _requestedProductName;
 String _userEmail;
 String _userName;
 String _mobileNumber;
+String _address;
 
-String get mobileNumber => _mobileNumber;
+String get address => _address;
+
+  set address(String value) {
+    _address = value;
+  }
+
+  String get mobileNumber => _mobileNumber;
 
   set mobileNumber(String value) {
     _mobileNumber = value;
@@ -40,6 +49,10 @@ RequestedProduct.fromSnapshot(DocumentSnapshot snapshot){
   _requestedProductName = data[RESUESTEDPRODUCTNAME];
   _userEmail = data[USEREMAIL];
   _userName = data[USERNAME];
-  _mobileNumber = data[MOBILENMBER];
+  _mobileNumber = data[MOBILENUMBER];
+  _address = data[ADDRESS];
 }
+
+
 }
+
