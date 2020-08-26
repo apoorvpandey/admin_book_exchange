@@ -13,6 +13,7 @@ class AddProduct extends StatefulWidget {
   _AddProductState createState() => _AddProductState();
 }
 
+
 class _AddProductState extends State<AddProduct> {
   CategoryService _categoryService = CategoryService();
   BrandService _brandService = BrandService();
@@ -46,8 +47,9 @@ class _AddProductState extends State<AddProduct> {
       items.insert(
           0,
           DropdownMenuItem(
-              child: Text(categories[i].data["category"]),
+              child: Text(categories[i].data["name"]),
               value: categories[i].data["category"]));
+
     }
     return items;
   }
@@ -166,7 +168,7 @@ class _AddProductState extends State<AddProduct> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Select author:",
+                      "Select brand:",
                       style: TextStyle(color: Colors.red),
                     ),
                   ),
@@ -248,6 +250,7 @@ class _AddProductState extends State<AddProduct> {
       categories = data;
       categoriesDropDown = getCategoriesDropDown();
       _currentCategory = categories[0].data["category"];
+      print("ffffff"+categories[0].data["category"]);
     });
   }
 
@@ -258,6 +261,7 @@ class _AddProductState extends State<AddProduct> {
       brands = data;
       brandsDropDown = getBrandsDropDown();
       _currentBrand = brands[0].data["brand"];
+      print("gggggg"+brands[0].data["brand"]);
     });
   }
 
